@@ -9,6 +9,7 @@ mapPeptidesToProtein(
   peptideTable,
   Accession,
   positionColumn,
+  shiftPosition = 0,
   variable,
   dataName = variable,
   NAValue = 0L,
@@ -28,6 +29,9 @@ This is what Proteome Discoverer produces}
 
 \item{positionColumn}{character vector which specifies which column contains the peptide position information. Proteome Discoverer uses either
 'PositionsinProteins' or 'PositionsinMasterProteins' (depending on the settings used in the consensus method)}
+
+\item{shiftPosition}{integer value, if the data in the proteinDF and the data in the peptideTable are shifted, this parameter can be used to align them.
+Default is 0}
 
 \item{variable}{character vector: name of the column in the 'peptideTable' that needs to be mapped onto the protein data}
 

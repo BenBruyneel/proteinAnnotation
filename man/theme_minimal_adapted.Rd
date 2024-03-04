@@ -8,7 +8,7 @@ theme_minimal_adapted(
   base_size = 11,
   base_family = "",
   base_line_size = base_size/22,
-  base_rect_size = base_size/22,
+  axis_line_size = base_line_size/2,
   xAxis = TRUE,
   yAxis = TRUE,
   showLegend = TRUE,
@@ -26,7 +26,7 @@ theme_minimal_adapted(
 
 \item{base_line_size}{width of gridlines, set  to 0 for none}
 
-\item{base_rect_size}{width of axis lines, set to 0 for none}
+\item{axis_line_size}{width of axis lines, set to 0 for none}
 
 \item{xAxis}{if TRUE then display xAxis title}
 

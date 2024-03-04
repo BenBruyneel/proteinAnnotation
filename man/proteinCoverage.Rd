@@ -20,7 +20,8 @@ proteinCoverage(
   cterm = NA,
   peptideTable,
   Accession,
-  positionColumn
+  positionColumn,
+  shiftPosition = 0
 )
 }
 \arguments{
@@ -68,6 +69,9 @@ a peptide may be present in more than one protein. Ignored when proteinTableRow 
 
 \item{positionColumn}{character vector which specifies which column contains the peptide position information. Proteome Discoverer uses either
 'PositionsinProteins' or 'PositionsinMasterProteins' (depending on the settings used in the consensus method)}
+
+\item{shiftPosition}{integer value, if the data in the protein sequence and the data in the peptideTable are shifted, this parameter can be
+used to align them. Default is 0 and ignored when proteinTableRow is not NA.}
 }
 \value{
 data.frame with same format as output by \code{\link{createProteinData}} or \code{\link{boxData}} with the 'coverage' column added. The values

@@ -263,6 +263,8 @@ createProteinData <- function(sequence, start = 1, end = nchar(sequence),
 #'  a peptide may be present in more than one protein. Ignored when proteinTableRow is not NA.
 #' @param positionColumn character vector which specifies which column contains the peptide position information. Proteome Discoverer uses either
 #'  'PositionsinProteins' or 'PositionsinMasterProteins' (depending on the settings used in the consensus method)
+#' @param shiftPosition integer value, if the data in the protein sequence and the data in the peptideTable are shifted, this parameter can be
+#'  used to align them. Default is 0 and ignored when proteinTableRow is not NA.
 #'
 #' @note it is possible to use both prepareColumns and prepareRows at the same time, but this may lead to errors and unexpected results.
 #'  It is therefore not recommended to do so.
@@ -283,7 +285,7 @@ proteinCoverage <- function(proteinTableRow = NA,
                             noCoverage = 0, coverage = 1,
                             sequence = NA, start = 1, end = ifelse(is.na(sequence), 1, nchar(sequence)),
                             nterm = NA, cterm = NA,
-                            peptideTable, Accession, positionColumn){
+                            peptideTable, Accession, positionColumn, shiftPosition = 0){
   if (!identical(proteinTableRow, NA)){
     xtra <- 1 # because in protein table the protein sequence starts at zero
     proteinData <- createProteinData(sequence = proteinTableRow$Sequence)
@@ -294,7 +296,7 @@ proteinCoverage <- function(proteinTableRow = NA,
       }
     }
   } else {
-    xtra <- 0
+    xtra <- shiftPosition
     proteinData <- createProteinData(sequence = sequence, start = start, end = end, nterm = nterm, cterm = cterm, emptySequence = emptySequence)
     coverageParts <- unique(purrr::map_chr(peptideTable[,positionColumn], ~getPositions(.x, Accession = Accession)))
   }
@@ -391,6 +393,8 @@ addDataToProtein <- function(proteinDF,
 #' @param Accession character vector that specifies from which protein Accession to get the position
 #' @param positionColumn character vector which specifies which column contains the peptide position information. Proteome Discoverer uses either
 #'  'PositionsinProteins' or 'PositionsinMasterProteins' (depending on the settings used in the consensus method)
+#' @param shiftPosition integer value, if the data in the proteinDF and the data in the peptideTable are shifted, this parameter can be used to align them.
+#'  Default is 0  
 #' @param variable character vector: name of the column in the 'peptideTable' that needs to be mapped onto the protein data
 #' @param dataName character vector: name of the new column in the protein data data.frame
 #' @param NAValue vector to be used for positions where no peptide data maps to
@@ -415,13 +419,13 @@ addDataToProtein <- function(proteinDF,
 #' newTable[35:45,]
 #' newTable[100:125,]
 mapPeptidesToProtein <- function(proteinDF,
-                                 peptideTable, Accession, positionColumn,
+                                 peptideTable, Accession, positionColumn, shiftPosition = 0,
                                  variable, dataName = variable, NAValue = 0L,
                                  combineFunction = sum, na.rm = TRUE){
   proteinDF$newVariable____ <- NAValue
   for (rowCounter in 1:nrow(peptideTable)){
     startstop <- getPositions(peptideTable[rowCounter, positionColumn], Accession = Accession)
-    for (positionCounter in startPosition(startstop):endPosition(startstop)){
+    for (positionCounter in (startPosition(startstop)+shiftPosition):(endPosition(startstop)+shiftPosition)){
       if (!identical(combineFunction, NA)){
         if (na.rm){
           proteinDF$newVariable____[positionCounter] <- combineFunction(c(proteinDF$newVariable____[positionCounter], peptideTable[rowCounter, variable]), na.rm = na.rm)

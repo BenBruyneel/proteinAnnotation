@@ -7,7 +7,7 @@
 #' @param base_size size of the lettering  of axis, title etc
 #' @param base_family letter type of axis, title etc
 #' @param base_line_size width of gridlines, set  to 0 for none
-#' @param base_rect_size width of axis lines, set to 0 for none
+#' @param axis_line_size width of axis lines, set to 0 for none
 #' @param xAxis if TRUE then display xAxis title
 #' @param yAxis if TRUE then display yAxis title
 #' @param showLegend if TRUE then show legend
@@ -26,7 +26,7 @@
 #' @export
 theme_minimal_adapted <- function(base_size = 11, base_family = "",
                                   base_line_size = base_size/22,
-                                  base_rect_size = base_size/22,
+                                  axis_line_size = base_line_size/2,
                                   xAxis = TRUE, yAxis = TRUE,
                                   showLegend = TRUE, legend.position = "bottom",
                                   gridLines = TRUE,
@@ -34,47 +34,57 @@ theme_minimal_adapted <- function(base_size = 11, base_family = "",
                                   gridLinesY = TRUE,
                                   titleSize = NA){
   theTheme <- ggplot2::theme_bw(base_size = base_size, base_family = base_family,
-                                base_line_size = base_line_size,
-                                base_rect_size = base_rect_size) %+replace%
-    ggplot2::theme(axis.ticks = ggplot2::element_blank(), legend.background = ggplot2::element_blank(),
+                                base_line_size = base_line_size) %>%
+    ggplot2::theme_replace(axis.ticks = ggplot2::element_blank(), legend.background = ggplot2::element_blank(),
                    legend.key = ggplot2::element_blank(), panel.background = ggplot2::element_blank(),
                    strip.background = ggplot2::element_blank(), #panel.border = ggplot2::element_blank(),
-                   plot.background = ggplot2::element_blank(), complete = TRUE)
+                   plot.background = ggplot2::element_blank(),
+                   panel.border = ggplot2::element_rect(color = "black", linewidth = axis_line_size, linetype = "solid", fill = NA))
   if (!xAxis) {
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(axis.title.x = ggplot2::element_blank(),
-                     axis.text.x = ggplot2::element_blank(), axis.ticks.x = ggplot2::element_blank())
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(axis.title.x = ggplot2::element_blank(),
+                             axis.text.x = ggplot2::element_blank(), axis.ticks.x = ggplot2::element_blank())
   }
   if (!yAxis) {
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(axis.title.y = ggplot2::element_blank(),
-                     axis.text.y = ggplot2::element_blank(), axis.ticks.y = ggplot2::element_blank())
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(axis.title.y = ggplot2::element_blank(),
+                             axis.text.y = ggplot2::element_blank(), axis.ticks.y = ggplot2::element_blank())
   }
   if (showLegend){
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(legend.position = legend.position)
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(legend.position = legend.position)
   } else {
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(legend.position = "none")
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(legend.position = "none")
   }
   if (!gridLines){
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(panel.grid = ggplot2::element_blank())
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(panel.grid = ggplot2::element_blank())
   } else {
     if (!gridLinesX){
-      theTheme <- theTheme %+replace%
-        ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
-                       panel.grid.minor.x = ggplot2::element_blank())
+      theTheme <- theTheme %>%
+        ggplot2::theme_replace(panel.grid.major.x = ggplot2::element_blank(),
+                               panel.grid.minor.x = ggplot2::element_blank())
+    } else {
+      theTheme <- theTheme %>%
+        ggplot2::theme_replace(panel.grid.major.x = ggplot2::element_line(color = "black", linewidth = axis_line_size, linetype = "dotted"),
+                               panel.grid.minor.x = ggplot2::element_blank())
+      
     }
     if (!gridLinesY){
-      theTheme <- theTheme %+replace%
-        ggplot2::theme(panel.grid.major.y = ggplot2::element_blank(),
-                       panel.grid.minor.y = ggplot2::element_blank())
+      theTheme <- theTheme %>%
+        ggplot2::theme_replace(panel.grid.major.y = ggplot2::element_blank(),
+                               panel.grid.minor.y = ggplot2::element_blank())
+    } else {
+      theTheme <- theTheme %>%
+        ggplot2::theme_replace(panel.grid.major.y = ggplot2::element_line(color = "black", linewidth = axis_line_size, linetype = "dotted"),
+                               panel.grid.minor.y = ggplot2::element_blank())
+      
     }
   }
   if (!identical(titleSize,NA)){
-    theTheme <- theTheme %+replace%
-      ggplot2::theme(plot.title = ggplot2::element_text(size = titleSize))
+    theTheme <- theTheme %>%
+      ggplot2::theme_replace(plot.title = ggplot2::element_text(size = titleSize))
   }
   return(theTheme)
 }

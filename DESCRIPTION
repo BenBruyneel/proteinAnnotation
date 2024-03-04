@@ -1,14 +1,14 @@
 Package: proteinAnnotation
 Title: ProteinAnnotation
-Imports: magrittr, dplyr, ggforce, ggplot2, glue, purrr, scales, stringr, tidyr, rlang, DescTools, gt
-Version: 0.3.0
+Imports: magrittr, dplyr, ggforce, ggplot2, glue, purrr, scales, stringr, tidyr, rlang, DescTools, gt, r3dmol
+Version: 0.5.1
 Author: Ben Bruyneel <benbruyneel@gmail.com>
 Maintainer: Ben Bruyneel <benbruyneel@gmail.com>
 Description: Display protein information.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
